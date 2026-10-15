@@ -1,23 +1,21 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import javax.swing.*;
+
+import exception.*;
 import model.UserAccount;
-import service.AuthService;
-import service.DashboardService;
+import service.*;
 
 public class DashboardWindow {
     JFrame frame;
-    JPanel mainDashboardPanel, northPanel, southPanel, westPanel, centerPanel, insightsPanel,withdrawPanel, depositPanel, transferPanel;
+    JPanel mainDashboardPanel, northPanel, southPanel, westPanel, centerPanel, insightsPanel, withdrawPanel,
+            depositPanel, transferPanel;
     JButton withdrawPanelButton, withdrawButton, depositPanelButton, depositButton, transferPanelButton, transferButton,
             logOutButton, backButton;
-    JLabel balanceLabel,welcomeMessage,usernameLabel, accNoLabel,balLabel,userCountLabel,withdrawLabel,depositLabel,transferAmountLabel,transferToLabel;
-    JTextField withdrawAmount,depositAmount, transferAmount,transferToUser;
+    JLabel balanceLabel, welcomeMessage, usernameLabel, accNoLabel, balLabel, userCountLabel, withdrawLabel,
+            depositLabel, transferAmountLabel, transferToLabel;
+    JTextField withdrawAmount, depositAmount, transferAmount, transferToUser;
     CardLayout cardLayout;
 
     public DashboardWindow(UserAccount user, AuthService auth) {
@@ -25,7 +23,7 @@ public class DashboardWindow {
         DashboardService dashboardService = new DashboardService(user, auth);
 
         frame = new JFrame("Dashboard");
-        frame.setSize(800, 600);
+        frame.setSize(800, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainDashboardPanel = new JPanel(new BorderLayout(15, 15));
         mainDashboardPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 25, 30));
@@ -36,10 +34,11 @@ public class DashboardWindow {
         balanceLabel.setFont(new Font("Arial", Font.PLAIN, 24));
         northPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 3));
         backButton = new JButton("Back");
-        backButton.setPreferredSize(new Dimension(95,42));
+        backButton.setFocusPainted(false);
+        backButton.setPreferredSize(new Dimension(95, 42));
         northPanel.add(backButton);
         backButton.setVisible(false);
-        welcomeMessage = new JLabel("LOOK WHO's BACK... WELCOME " + user.getUsername() + "!");
+        welcomeMessage = new JLabel("WELCOME to NET-BANKING, " + user.getUsername() + "!");
         welcomeMessage.setFont(new Font("Arial", Font.PLAIN, 25));
         northPanel.add(welcomeMessage);
         balanceLabel.setVisible(false);
@@ -50,8 +49,11 @@ public class DashboardWindow {
         // west component (sidebar)
         westPanel = new JPanel(new GridLayout(8, 1, 0, 5));
         withdrawPanelButton = new JButton("Withdraw");
+        withdrawPanelButton.setFocusPainted(false);
         depositPanelButton = new JButton("Deposit");
+        depositPanelButton.setFocusPainted(false);
         transferPanelButton = new JButton("Transfer");
+        transferPanelButton.setFocusPainted(false);
         westPanel.add(new JLabel(""));
         westPanel.add(new JLabel("Select Service:"));
         westPanel.add(withdrawPanelButton);
@@ -64,6 +66,9 @@ public class DashboardWindow {
 
         southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         logOutButton = new JButton("Log-out");
+        logOutButton.setBackground(Color.GRAY);
+        logOutButton.setForeground(Color.BLACK);
+        logOutButton.setFocusPainted(false);
         logOutButton.setPreferredSize(new Dimension(125, 50));
         southPanel.add(logOutButton);
 
@@ -86,15 +91,15 @@ public class DashboardWindow {
         accNoLabel.setFont(font);
         insightsPanel.add(accNoLabel);
 
-        balLabel=new JLabel("               Balance: "+user.getBalance());
+        balLabel = new JLabel("               Balance: " + user.getBalance());
         balLabel.setFont(font);
         insightsPanel.add(balLabel);
 
+        insightsPanel.add(new JLabel(""));
+        insightsPanel.add(new JLabel(""));
 
-        insightsPanel.add(new JLabel(""));
-        insightsPanel.add(new JLabel(""));
-        
-        userCountLabel = new JLabel("               Number of users registered on the self-service facility: " + UserAccount.userCount);
+        userCountLabel = new JLabel(
+                "               Number of users registered on the self-service facility: " + UserAccount.userCount);
         userCountLabel.setFont(font);
         insightsPanel.add(userCountLabel);
 
@@ -104,10 +109,11 @@ public class DashboardWindow {
         // withdraw - card panel
 
         withdrawPanel = new JPanel(new GridLayout(0, 2));
-        withdrawLabel = new JLabel("                 Enter amount to withdraw: ");
+        withdrawLabel = new JLabel("                  Enter withdrawal amount: ");
         withdrawLabel.setFont(font);
         withdrawAmount = new JTextField();
-        withdrawButton = new JButton("Confirm");
+        withdrawButton = new JButton("Proceed");
+        withdrawButton.setFocusPainted(false);
 
         withdrawPanel.add(new JLabel(""));
         withdrawPanel.add(new JLabel(""));
@@ -138,10 +144,10 @@ public class DashboardWindow {
         // deposit- card Panel
         depositPanel = new JPanel(new GridLayout(0, 2));
 
-        depositLabel = new JLabel("                  Enter amount to deposit:");
+        depositLabel = new JLabel("                  Enter amount to be deposited:");
         depositLabel.setFont(font);
         depositAmount = new JTextField();
-        depositButton = new JButton("Confirm");
+        depositButton = new JButton("Proceed");
         depositPanel.add(new JLabel(""));
         depositPanel.add(new JLabel(""));
         depositPanel.add(new JLabel(""));
@@ -169,13 +175,14 @@ public class DashboardWindow {
         // transfer card panel
         transferPanel = new JPanel(new GridLayout(0, 2));
 
-        transferAmountLabel = new JLabel("                  Enter amount to transfer:");
+        transferAmountLabel = new JLabel("                  Enter amount to be transferred:");
         transferToLabel = new JLabel("                  Enter username of the receiver:");
         transferAmountLabel.setFont(font);
         transferToLabel.setFont(font);
         transferToUser = new JTextField();
         transferAmount = new JTextField();
-        transferButton = new JButton("Confirm");
+        transferButton = new JButton("Proceed");
+        transferButton.setFocusPainted(false);
 
         transferPanel.add(new JLabel(""));
         transferPanel.add(new JLabel(""));
@@ -238,15 +245,22 @@ public class DashboardWindow {
 
             backButton.setVisible(false);
             balanceLabel.setVisible(false);
-            balLabel.setText("               Balance: "+user.getBalance());
+            balLabel.setText("               Balance: " + user.getBalance());
             cardLayout.show(centerPanel, "INSIGHTS_PANEL");
         });
         withdrawButton.addActionListener(e -> {
             try {
                 String amount = withdrawAmount.getText();
-                dashboardService.withdraw(amount);
-                balanceLabel.setText("            Balance: " + user.getBalance() + " $ (USD)");
-                withdrawAmount.setText("");
+                if(amount.isEmpty())
+                    throw new RequiredFieldsEmptyException("Enter amount to withdraw");
+                int  confirmed = JOptionPane.showConfirmDialog(centerPanel, "Are you sure you want to withdraw $"+amount+" ?", 
+                "Confirm Deposit",JOptionPane.YES_NO_OPTION ,JOptionPane.QUESTION_MESSAGE);
+
+                if (confirmed==JOptionPane.YES_OPTION) {
+                    dashboardService.withdraw(amount);
+                    balanceLabel.setText("            Balance: " + user.getBalance() + " $ (USD)");
+                    withdrawAmount.setText("");
+                }
 
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(centerPanel, "Enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -258,9 +272,16 @@ public class DashboardWindow {
         depositButton.addActionListener(e -> {
             try {
                 String amount = depositAmount.getText();
-                dashboardService.deposit(amount);
-                balanceLabel.setText("            Balance: " + user.getBalance() + " $ (USD)");
-                depositAmount.setText("");
+                if(amount.isEmpty())
+                    throw new RequiredFieldsEmptyException("Enter amount to be deposited.");
+                int  confirmed = JOptionPane.showConfirmDialog(centerPanel, "Are you sure you want to deposit $"+amount+" ?", 
+                "Confirm Deposit",JOptionPane.YES_NO_OPTION ,JOptionPane.QUESTION_MESSAGE);
+
+                if (confirmed==JOptionPane.YES_OPTION) {
+                    dashboardService.deposit(amount);
+                    balanceLabel.setText("            Balance: " + user.getBalance() + " $ (USD)");
+                    depositAmount.setText("");
+                }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(centerPanel, "Enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
@@ -272,10 +293,17 @@ public class DashboardWindow {
             try {
                 String amount = transferAmount.getText();
                 String transferTo = transferToUser.getText();
-                dashboardService.transfer(transferTo, amount);
-                balanceLabel.setText("            Balance: " + user.getBalance() + " $ (USD)");
-                transferAmount.setText("");
-                transferToUser.setText("");
+                if(amount.isEmpty() || transferTo.isEmpty())
+                    throw new RequiredFieldsEmptyException("Enter amount to transfer and the username of the recipient.");
+                int  confirmed = JOptionPane.showConfirmDialog(centerPanel, "Transfer $" + amount + " to recipient: " + transferTo + "?", 
+                "Confirm Transfer",JOptionPane.YES_NO_OPTION ,JOptionPane.QUESTION_MESSAGE);
+
+                if (confirmed==JOptionPane.YES_OPTION) {
+                    dashboardService.transfer(transferTo, amount);
+                    balanceLabel.setText("            Balance: " + user.getBalance() + " $ (USD)");
+                    transferAmount.setText("");
+                    transferToUser.setText("");
+                }
 
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(centerPanel, "Enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
